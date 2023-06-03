@@ -6,4 +6,14 @@ const Command = require('../command.js');
 
 describe("Message class", function() {
 
+  const setMessageParams = new Message("This is the message.", [new Command("MOVE", 1), new Command("MOVE", 2)]);
+    
+  it("constructor sets name", function(){
+    expect(setMessageParams.name).toEqual("This is the message.")
+  })
+  
+  it("constructor sets commands", function(){
+    expect(setMessageParams.commands).toEqual([new Command("MOVE", 1), new Command("MOVE", 2)])
+  })
+  
 });
