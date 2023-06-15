@@ -8,7 +8,7 @@ const Command = require('../command.js');
 describe("Rover class", function() {
 
   const rover = new Rover(2023);
-  const message = new Message("This is the message.", [new Command("MOVE", 1), new Command("MOVE", 2)])
+  const message = new Message("This is the message.", [new Command("MOVE", 1), new Command("STATUS_CHECK")])
   
   // 7 tests here!
   it("constructor sets position and default values for mode and generatorWatts", function(){
@@ -22,15 +22,15 @@ describe("Rover class", function() {
     expect(rover.receiveMessage(message).name).toEqual("This is the message.")
   })
 
-  // //test 9
-  // it("response returned by receiveMessage includes two results if two commands are sent in the message", function(){
-    
-  // })
+  //test 9
+  it("response returned by receiveMessage includes two results if two commands are sent in the message", function(){
+    expect(rover.receiveMessage(message).commands.length).toEqual(2)
+  })
 
-  // //test 10
-  // it("responds correctly to status check command", function(){
-    
-  // })
+  //test 10
+  it("responds correctly to status check command", function(){
+    expect(rover.receiveMessage(message).commands[1]).toEqual("{completed: true, roverStatus: {mode: 'NORMAL', generatorWatts: 110, position: 2023}}")
+  })
 
   // //test 11
   // it("responds correctly to mode change command", function(){
