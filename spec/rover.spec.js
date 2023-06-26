@@ -9,6 +9,7 @@ describe("Rover class", function() {
 
   const rover = new Rover(2023);
   const message = new Message("This is the message.", [new Command("MOVE", 1), new Command("STATUS_CHECK")])
+  const secondMessage = new Message("Second message", [new Command("MODE_CHANGE", "LOW_POWER"), new Command("MOVE", 2)])
   
   // 7 tests here!
   it("constructor sets position and default values for mode and generatorWatts", function(){
@@ -24,28 +25,31 @@ describe("Rover class", function() {
 
   //test 9
   it("response returned by receiveMessage includes two results if two commands are sent in the message", function(){
-    expect(rover.receiveMessage(message).commands.length).toEqual(2)
+    expect(rover.receiveMessage(message).results.length).toEqual(2)
   })
 
   //test 10
   it("responds correctly to status check command", function(){
-    expect(rover.receiveMessage(message).commands[1]).toEqual("{completed: true, roverStatus: {mode: 'NORMAL', generatorWatts: 110, position: 2023}}")
+    expect(rover.receiveMessage(message).results[1]).toEqual(Object({completed: true, roverStatus: {mode: 'NORMAL', generatorWatts: 110, position: 1}}))
   })
 
-  // //test 11
-  // it("responds correctly to mode change command", function(){
-    
-  // })
+  //test 11
+  it("responds correctly to mode change command", function(){
+    expect(rover.receiveMessage(secondMessage).results[0]).toEqual(Object({completed: true}));
+    expect(rover.mode).toEqual("LOW_POWER");
+
+  })
 
 
-  // //test 12
-  // it("responds with false completed value when attempting to move in LOW_POWER mode", functino(){
-    
-  // })
+  //test 12
+  it("responds with false completed value when attempting to move in LOW_POWER mode", function(){
+    expect(rover.receiveMessage(secondMessage).results[1]).toEqual(Object({completed: false}));
+  })
 
-  // //test 13
-  // it("responds with position for move command", function(){
-    
-  // })
+  //test 13
+  it("responds with position for move command", function(){
+    rover.receiveMessage(message);
+    expect(rover.position).toEqual(1)
+  })
 
 });
